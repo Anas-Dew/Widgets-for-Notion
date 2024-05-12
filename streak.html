@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Streak</title>
+    <link rel="stylesheet" href="global.css" />
+    <script src="/script.js"></script>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        background: var(--bg-element-gray);
+        border-radius: 15px;
+        width: 90%;
+        height: 90%;
+      }
+
+      .container-dark {
+        background: var(--bg-element-dark);
+      }
+
+      .counter {
+        text-align: center;
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      .title {
+        font-size: 1rem;
+        position: relative;
+        bottom: 7px;
+      }
+      .title-dark {
+        color: aliceblue;
+      }
+
+      .animate-charcter {
+        text-transform: uppercase;
+        background-image: linear-gradient(
+          -225deg,
+          #231557 0%,
+          #44107a 29%,
+          #ff1361 67%,
+          #fff800 100%
+        );
+        background-size: auto auto;
+        background-clip: border-box;
+        background-size: 200% auto;
+        color: #fff;
+        background-clip: text;
+        text-fill-color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textclip 2s linear infinite;
+        display: inline-block;
+      }
+
+      @keyframes textclip {
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      .title-word {
+        animation: color-animation 4s linear infinite;
+      }
+
+      .title-word-1 {
+        --color-1: #df8453;
+        --color-2: #3d8dae;
+        --color-3: #e4a9a8;
+      }
+
+      .title-word-2 {
+        --color-1: #dbad4a;
+        --color-2: #accfcb;
+        --color-3: #17494d;
+      }
+
+      @keyframes color-animation {
+        0% {
+          color: var(--color-1);
+        }
+        32% {
+          color: var(--color-1);
+        }
+        33% {
+          color: var(--color-2);
+        }
+        65% {
+          color: var(--color-2);
+        }
+        66% {
+          color: var(--color-3);
+        }
+        99% {
+          color: var(--color-3);
+        }
+        100% {
+          color: var(--color-1);
+        }
+      }
+    </style>
+  </head>
+
+  <body id="body">
+    <main id="main" class="container center_in">
+      <div class="counter">
+        <span id="count" class="title-word title-word-1">0</span>
+        <span id="day" class="title-word title-word-2"></span>
+      </div>
+      <h1 class="title" id="title">Without Cake</h1>
+    </main>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const body = document.querySelector("#body");
+      const main = document.querySelector("#main");
+      const titleElement = document.querySelector("#title");
+      const countElement = document.querySelector("#count");
+      const dayElement = document.querySelector("#day");
+
+      const theme = urlParams.get("theme") || "light";
+      const title = urlParams.get("title") || "With Love 💗";
+      const streakStartDate = urlParams.get("streakStartDate") || "2002-12-20";
+      const type = urlParams.get("type") || "with";
+
+      try {
+        function getConfig() {
+          body.classList.add(theme);
+          main.classList.add("container-" + theme);
+          titleElement.classList.add("title-" + theme);
+
+          // Set Title
+          titleElement.textContent = `${type} ${title}`;
+
+          // Calculate current streak count
+          const count = Math.floor(
+            (new Date() - new Date(streakStartDate)) / (1000 * 60 * 60 * 24)
+          );
+
+          // Get current date
+          const currentDate = new Date();
+
+          // Check if URL date is equal to current date
+          if (
+            new Date(streakStartDate).toDateString() ===
+            currentDate.toDateString()
+          ) {
+            // Update DOM with "From Today" message
+            countElement.textContent = "from this day";
+          } else if (new Date(streakStartDate) > currentDate) {
+            // Update DOM with "In the future" message
+            countElement.textContent = "in the future";
+          } else {
+            // Update DOM with streak count
+            countElement.textContent = count;
+            dayElement.textContent = "days";
+          }
+        }
+        getConfig();
+      } catch (error) {
+        console.error("Error fetching streak data:", error);
+      }
+    </script>
+  </body>
+</html>

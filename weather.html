@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="global.css" />
+    <title>Weather Widget</title>
+    <style>
+      .container {
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+      }
+
+      .header {
+        background-color: #93adcc;
+        color: #fff;
+        padding: 7px;
+        text-align: center;
+        border-radius: 15px;
+      }
+      .header-night {
+        background-color: #323b45 !important;
+        color: #b2b2b2 !important;
+      }
+
+      .header img {
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        border-radius: 50%;
+        margin-bottom: -47px;
+      }
+
+      .temperature {
+        font-size: 36px;
+        margin-bottom: -22px;
+      }
+
+      .description {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://bmcdn.nl/assets/weather-icons/v3.0/fill/svg/dust-day.svg"
+          alt="Weather Icon"
+        />
+        <p id="temp" class="temperature">null°C</p>
+        <p id="city" class="description">In Delhi</p>
+      </div>
+    </div>
+  </body>
+  <script>
+    async function fetchWeatherData(lat, lon, city) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const latitude = lat || "28.644800";
+      const longitude = lon || "77.216721";
+      const cityName = city || "Delhi";
+
+      const API_URL = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,is_day,wind_speed_10m&forecast_days=1`;
+      try {
+        const response = await fetch(API_URL);
+        const temperatureElement = document.getElementById("temp");
+        const cityElement = document.getElementById("city");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const temperature = data.current.temperature_2m;
+        temperatureElement.innerText = `${temperature}°C`;
+        cityElement.innerText = `In ${cityName}`;
+
+        if (data.current.is_day === 0) {
+          document.querySelector(".header").classList.add("header-night");
+          document.querySelector(".header").firstElementChild.src =
+            "https://bmcdn.nl/assets/weather-icons/v3.0/fill/svg/starry-night.svg";
+        }
+      } catch (error) {
+        console.error("Failed to fetch weather data:", error);
+      }
+    }
+    // ---------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const lat = urlParams.get("lat");
+    const lon = urlParams.get("lon");
+    const city = urlParams.get("city");
+
+    try {
+      async function getConfig() {
+        if (!lat || !lon || !city) {
+          alert(
+            "Error: Latitude, longitude, and city are required parameters."
+          );
+          return;
+        }
+
+        fetchWeatherData(lat, lon, city);
+      }
+      getConfig();
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+    }
+  </script>
+</html>

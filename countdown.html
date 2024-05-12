@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="global.css">
+    <title>Countdown</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #countdown-widget {
+        padding: 20px;
+        border-radius: 15px;
+        background-color: #ffffff;
+      }
+
+      #title {
+        color: #333333;
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      #countdown-container {
+        display: grid;
+        /* Two columns */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .time-block {
+        font-size: 24px;
+        color: #555555;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #e5e5e5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      @keyframes fadeEffect {
+        from {
+          opacity: 0.4;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      .time-block-updated {
+        animation: fadeEffect 0.5s ease-in-out;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="countdown-widget">
+      <p id="title">Countdown</p>
+      <div id="countdown-container">
+        <div class="time-block" id="days">D</div>
+        <div class="time-block" id="hours">H</div>
+        <div class="time-block" id="minutes">M</div>
+        <div class="time-block" id="seconds">S</div>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const title = params.get("title") || "Countdown";
+      const targetDateParam = params.get("date");
+      const targetDate = targetDateParam
+        ? new Date(targetDateParam)
+        : new Date();
+
+      if (!title || !targetDateParam) {
+        return alert("Missing required parameters: title or date");
+      }
+      targetDate.setHours(0, 0, 0, 0); // Ensure time is at the start of the day
+
+      document.getElementById("title").textContent = title;
+
+      let previousTime = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+      function updateCountdown() {
+        const now = new Date();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+          document.getElementById("countdown").textContent =
+            "Event has occurred!";
+          return;
+        }
+
+        const currentTime = {
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          ),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        };
+
+        Object.keys(currentTime).forEach((unit) => {
+          if (currentTime[unit] !== previousTime[unit]) {
+            const element = document.getElementById(unit);
+            element.textContent = currentTime[unit].toString().padStart(2, "0");
+            if (!element.classList.contains("time-block-updated")) {
+              element.classList.add("time-block-updated");
+              setTimeout(
+                () => element.classList.remove("time-block-updated"),
+                500
+              );
+            }
+          }
+        });
+
+        previousTime = currentTime;
+      }
+
+      setInterval(updateCountdown, 1000);
+    });
+  </script>
+</html>

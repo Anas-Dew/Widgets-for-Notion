@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="global.css">
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #clock {
+        rotate: 270deg;
+        width: 200px;
+        height: 200px;
+        border: 10px solid #333;
+        border-radius: 50%;
+        position: relative;
+        background-color: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #hour,
+      #minute,
+      #second {
+        position: absolute;
+        background-color: red;
+        transform-origin: 0%;
+        top: 50%;
+        left: 50%;
+        width: 45%;
+        height: 2px;
+        transform: translateX(-50%) rotate(-90deg);
+      }
+
+      #hour {
+        width: 42%;
+        height: 4px;
+        background-color: #333;
+        transform: rotate(-90deg) translateX(-50%);
+      }
+
+      #minute {
+        width: 47%;
+        height: 4px;
+        background-color: #666;
+        transform: rotate(-90deg) translateX(-50%);
+      }
+
+      #second {
+        width: 45%;
+        height: 2px;
+        background-color: var(--accent);
+        transform: rotate(-90deg) translateX(-50%);
+      }
+
+      .center-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #333;
+        position: absolute;
+        z-index: 10;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="clock">
+      <div class="center-dot"></div>
+      <div id="hour" style="transform: rotate(90deg)"></div>
+      <div id="minute" style="transform: rotate(180deg)"></div>
+      <div id="second" style="transform: rotate(270deg)"></div>
+    </div>
+    <script>
+      const hourHand = document.getElementById("hour");
+      const minuteHand = document.getElementById("minute");
+      const secondHand = document.getElementById("second");
+
+      function setClock() {
+        const now = new Date();
+        const seconds = now.getSeconds() / 60;
+        const minutes = (seconds + now.getMinutes()) / 60;
+        const hours = (minutes + now.getHours()) / 12;
+
+        secondHand.style.transform = `rotate(${seconds * 360}deg)`;
+        minuteHand.style.transform = `rotate(${minutes * 360}deg)`;
+        hourHand.style.transform = `rotate(${hours * 360}deg)`;
+      }
+
+      setInterval(setClock, 1000);
+      setClock(); // Initialize clock immediately without waiting for 1 second.
+    </script>
+  </body>
+</html>

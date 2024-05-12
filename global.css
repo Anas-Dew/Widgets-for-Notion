@@ -1,0 +1,72 @@
+@font-face {
+    font-family: sequel;
+    src: url(assets/Sequel\ Sans\ Bold\ Disp.ttf);
+}
+
+:root {
+    --bg-element-gray: rgb(243 244 246);
+    --accent: #17494d;
+    --bg-element-dark: #202020;
+    --accent-dark: #c8c8c8;
+}
+
+body {
+    font-family: sequel;
+    text-align: center;
+    margin: auto;
+}
+
+button {
+    font-family: sequel;
+}
+
+.center_in {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.light {
+    /* background-color: aquamarine; */
+}
+
+.dark {
+    background-color: #333333;
+}
+
+/* Style for the table */
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+/* Style for table header cells */
+th {
+    background-color: #f2f2f2;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style for table data cells */
+td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style for table links */
+a {
+    color: #007bff;
+    /* Blue color for links */
+    text-decoration: none;
+}
+
+/* Hover effect for links */
+a:hover {
+    text-decoration: underline;
+}

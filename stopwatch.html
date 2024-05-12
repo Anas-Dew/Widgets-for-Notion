@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="global.css" />
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(0, 0, 0);
+      }
+
+      .branding {
+        padding: 0;
+        margin: -3px;
+        font-style: italic;
+      }
+      .stopwatch {
+        background: var(--bg-element-gray);
+        border-radius: 15px;
+        padding: 30px;
+        width: 12rem;
+        height: 10rem;
+      }
+      .circle {
+        background: #dbffd8;
+        border: 2px solid rgb(0 0 0 / 13%);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+      .time {
+        font-size: 2em;
+        letter-spacing: 2px;
+      }
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 10px;
+        transition: background-color 0.3s ease;
+      }
+      .button:focus {
+        outline: none;
+      }
+      .button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      .icon {
+        width: 24px;
+        height: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stopwatch">
+      <p class="branding">WFN</p>
+      <div class="circle">
+        <div class="time" id="display">00:00:00</div>
+      </div>
+      <div class="buttons">
+        <button class="button" id="startStop">start</button>
+        <button class="button" id="reset">reset</button>
+      </div>
+    </div>
+
+    <script>
+      var stopwatchInterval;
+      var elapsedSeconds = 0;
+      var running = false;
+
+      function updateDisplay() {
+        var minutes = Math.floor(elapsedSeconds / 60);
+        var seconds = elapsedSeconds % 60;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        document.getElementById("display").textContent =
+          "00:" + minutes + ":" + seconds;
+      }
+
+      function toggleStopwatch() {
+        if (!running) {
+          running = true;
+          stopwatchInterval = setInterval(function () {
+            elapsedSeconds++;
+            updateDisplay();
+          }, 1000);
+          document.getElementById("startStop").textContent = "stop";
+        } else {
+          running = false;
+          clearInterval(stopwatchInterval);
+          document.getElementById("startStop").textContent = "start";
+        }
+      }
+
+      function resetStopwatch() {
+        running = false;
+        clearInterval(stopwatchInterval);
+        elapsedSeconds = 0;
+        updateDisplay();
+        document.getElementById("startStop").textContent = "start";
+      }
+
+      document
+        .getElementById("startStop")
+        .addEventListener("click", toggleStopwatch);
+      document
+        .getElementById("reset")
+        .addEventListener("click", resetStopwatch);
+    </script>
+  </body>
+</html>

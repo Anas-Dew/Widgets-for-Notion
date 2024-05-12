@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="global.css" />
+    <title>Quote</title>
+    <style>
+      body {
+        font-family: sequel;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+      }
+      .quote-container {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .light {
+        /* background-color: aquamarine; */
+      }
+      .dark {
+        background-color: #333333;
+      }
+      .quote-text-light {
+        font-size: 20px;
+        color: #333333;
+        margin-bottom: 10px;
+      }
+      .quote-author-light {
+        font-size: 16px;
+        color: #666666;
+        margin-top: 10px;
+      }
+
+      .quote-text-dark {
+        font-size: 20px;
+        color: #cccccc;
+        margin-bottom: 10px;
+      }
+      .quote-author-dark {
+        font-size: 16px;
+        color: #777777;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body id="body" class="light">
+    <div class="quote-container">
+      <div class="quote-text-light" id="quoteText">Inspiring...</div>
+      <div class="quote-author-light" id="quoteAuthor"></div>
+      <p style="display: none" id="configMessage">Invalid Config</p>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const quoteText = document.querySelector("#quoteText");
+      const quoteAuthor = document.querySelector("#quoteAuthor");
+      const body = document.querySelector("#body");
+
+      const theme = urlParams.get("theme") || "light";
+
+      try {
+        function getConfig() {
+          body.classList.add(theme);
+          quoteAuthor.classList.add(`quote-author-${theme}`);
+          quoteText.classList.add(`quote-text-${theme}`);
+        }
+        getConfig();
+      } catch (error) {
+        console.error("Error fetching quote data:", error);
+      }
+
+      fetch("https://api.quotable.io/quotes/random")
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById(
+            "quoteText"
+          ).textContent = `"${data[0].content}"`;
+          document.getElementById(
+            "quoteAuthor"
+          ).textContent = `- ${data[0].author}`;
+        })
+        .catch(() => {
+          document.getElementById("quoteText").textContent =
+            "Oops! Couldn't fetch the quote.";
+          document.getElementById("quoteAuthor").textContent = "";
+        });
+    </script>
+  </body>
+</html>
